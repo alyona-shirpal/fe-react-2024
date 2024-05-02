@@ -21,7 +21,10 @@ export const Card: React.FC<{ product: Product }> = ({ product }) => {
             <img className={styles.cardImage} src={product.images[0]} alt="product-image" />
             <div className={styles.cardTitle}>{product.title}</div>
             <div className={styles.cardPriceBlock}>
-                <div className={styles.cardPrice}>{product.price}₴</div>
+                <div className={styles.priceWrap}>
+                    <div className={styles.cardPrice}>{product.price}</div>
+                    <p className={styles.hryvna}>₴</p>
+                </div>
                 <button onClick={handleCartClick} className={styles.cardIcon}>
                     <CartIcon />
                 </button>

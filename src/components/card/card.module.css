@@ -20,10 +20,24 @@
   line-height: 25px;
 }
 
+.priceWrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .cardPrice {
   font-size: 22px;
   font-weight: 600;
   line-height: 25px;
+}
+
+.hryvna {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 17px;
+  margin: 0;
+  padding: 5px 0 0 2px;
 }
 
 .cardPriceBlock {
