@@ -18,7 +18,7 @@ export const Card: React.FC<{ product: Product }> = ({ product }) => {
 
     return (
         <div className={styles.cardWrapper}>
-            <img className={styles.cardImage} src={product.images[0]} alt="product-image" />
+            <img className={styles.cardImage} src={product.images[0]} alt="product" />
             <div className={styles.cardTitle}>{product.title}</div>
             <div className={styles.cardPriceBlock}>
                 <div className={styles.priceWrap}>
