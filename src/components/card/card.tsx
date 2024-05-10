@@ -1,19 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { CartIcon } from '@/assets/icons/Cart.tsx';
 import type { Product } from '@/types/interfaces/Product.ts';
 
 import styles from './card.module.css';
 
-export const Card: React.FC<{ product: Product }> = ({ product }) => {
-    const [count, setCount] = useState(0);
+interface CardProps {
+    product: Product;
+    onCartChange: () => void;
+}
+
+export const Card: React.FC<CardProps> = ({ product, onCartChange }) => {
+    const [count, setCount] = useState(() => {
+        const savedCount = localStorage.getItem(`cartCount-${product.id}`);
+        return savedCount ? Number.parseInt(savedCount, 10) : 0;
+    });
+
+    useEffect(() => {
+        localStorage.setItem(`cartCount-${product.id}`, count.toString());
+        onCartChange();
+    }, [count, product.id, onCartChange]);
 
     const handleCartClick = () => {
-        const cartCount = Number(localStorage.getItem('cartCount')) || 0;
-        localStorage.setItem('cartCount', (cartCount + 1).toString());
-        setCount(count + 1);
-
-        window.dispatchEvent(new CustomEvent('cartUpdated'));
+        setCount((previousCount) => (previousCount === 1 ? 0 : 1));
     };
 
     return (

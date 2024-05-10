@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import { BurgerIcon } from '@/assets/icons/Burger.tsx';
 import { CartIcon } from '@/assets/icons/Cart.tsx';
@@ -14,22 +14,10 @@ import styles from './header.module.css';
 interface HeaderProps {
     onChange: (page: ActivePage) => void;
     activePage: ActivePage;
+    totalCart: number;
 }
-export const Header: React.FC<HeaderProps> = ({ onChange, activePage }) => {
+export const Header: React.FC<HeaderProps> = ({ onChange, activePage, totalCart }) => {
     const [activeTheme, setActiveTheme] = useState<ActiveTheme>('dark');
-    const [totalCart, setTotalCart] = useState(0);
-
-    useEffect(() => {
-        const handleCartUpdate = () => {
-            const productsInCart = Number(localStorage.getItem('cartCount')) || 0;
-            setTotalCart(productsInCart);
-        };
-        window.addEventListener('cartUpdated', handleCartUpdate);
-
-        return () => {
-            window.removeEventListener('cartUpdated', handleCartUpdate);
-        };
-    }, []);
 
     return (
         <header className={styles.headerWrapper}>
