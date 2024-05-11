@@ -10,8 +10,13 @@ import { SunIcon } from '@/assets/icons/Sun.tsx';
 import type { ActivePage, ActiveTheme } from '@/types/states.ts';
 
 import styles from './header.module.css';
-export const Header: React.FC = () => {
-    const [activePage, setActivePage] = useState<ActivePage>('about');
+
+interface HeaderProps {
+    onChange: (page: ActivePage) => void;
+    activePage: ActivePage;
+    totalCart: number;
+}
+export const Header: React.FC<HeaderProps> = ({ onChange, activePage, totalCart }) => {
     const [activeTheme, setActiveTheme] = useState<ActiveTheme>('dark');
 
     return (
@@ -35,28 +40,25 @@ export const Header: React.FC = () => {
 
             <div className={styles.rightHeader}>
                 <div className={styles.pages}>
-                    <button
-                        className={activePage === 'about' ? styles.activeButton : styles.defaultLink}
-                        onClick={() => setActivePage('about')}
-                    >
+                    <button className={activePage === 'about' ? styles.activeButton : styles.defaultLink} onClick={() => onChange('about')}>
                         About
                     </button>
                     <button
                         className={activePage === 'products' ? styles.activeButton : styles.defaultLink}
-                        onClick={() => setActivePage('products')}
+                        onClick={() => onChange('products')}
                     >
                         Products
                     </button>
                 </div>
 
                 <div className={styles.menuSide}>
-                    <button>
-                        <CartIcon />
+                    <button className={styles.cartButton}>
+                        <CartIcon color={'white'} />
+                        {totalCart > 0 && <div className={styles.counter}>{totalCart}</div>}
                     </button>
                     <button className={styles.burgerButton}>
                         <BurgerIcon />
                     </button>
-
                     <div className={styles.authWrapper}>
                         <button className={styles.authButton}>
                             <LoginIcon /> Login

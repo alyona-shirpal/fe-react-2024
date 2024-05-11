@@ -12,6 +12,7 @@
   text-rendering: optimizelegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  --icon-color: #FFF;
 }
 
 a {
@@ -20,9 +21,6 @@ a {
   text-decoration: inherit;
 }
 
-a:hover {
-  color: #535BF2;
-}
 
 body {
   margin: 0;
@@ -61,7 +59,7 @@ html {
 }
 
 .main-root {
-  min-height: 100vh;
+  min-height: 100%;
   display: flex;
   flex-direction: column;
 }
@@ -71,6 +69,7 @@ html {
   :root {
     color: #213547;
     background-color: #FFF;
+    --icon-color: #000;
   }
 
   a {
