@@ -15,9 +15,16 @@ interface HeaderProps {
     onChange: (page: ActivePage) => void;
     activePage: ActivePage;
     totalCart: number;
+    onThemeChange: (theme: ActiveTheme) => void;
+    currentTheme: ActiveTheme;
 }
-export const Header: React.FC<HeaderProps> = ({ onChange, activePage, totalCart }) => {
-    const [activeTheme, setActiveTheme] = useState<ActiveTheme>('dark');
+export const Header: React.FC<HeaderProps> = ({ onChange, activePage, totalCart, onThemeChange, currentTheme }) => {
+    const [activeTheme, setActiveTheme] = useState<ActiveTheme>(currentTheme);
+
+    const changeTheme = (theme: ActiveTheme) => {
+        setActiveTheme(theme);
+        onThemeChange(theme);
+    };
 
     return (
         <header className={styles.headerWrapper}>
@@ -26,13 +33,13 @@ export const Header: React.FC<HeaderProps> = ({ onChange, activePage, totalCart 
                     <LogoIcon />
                 </div>
                 <div className={styles.themeWrapper}>
-                    <button className={styles.themeButton} onClick={() => setActiveTheme('light')}>
+                    <button className={styles.themeButton} onClick={() => changeTheme('light')}>
                         <SunIcon theme={activeTheme} />
                     </button>
 
                     <div className={styles.pipe}></div>
 
-                    <button className={styles.themeButton} onClick={() => setActiveTheme('dark')}>
+                    <button className={styles.themeButton} onClick={() => changeTheme('dark')}>
                         <MoonIcon theme={activeTheme} />
                     </button>
                 </div>

@@ -1,29 +1,20 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700&display=swap");
 @import "assets/variables.css";
 
-:root {
+a {
+  font-weight: 500;
+  text-decoration: inherit;
+}
+
+body {
+  margin: 0;
   font-family: Montserrat, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, .87);
-  background-color: #242424;
   font-synthesis: none;
   text-rendering: optimizelegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  --icon-color: #FFF;
-}
-
-a {
-  font-weight: 500;
-  color: #646CFF;
-  text-decoration: inherit;
-}
-
-
-body {
-  margin: 0;
   align-items: center;
   min-width: 320px;
   min-height: 100vh;
@@ -65,16 +56,6 @@ html {
 }
 
 @media (prefers-color-scheme: light) {
-
-  :root {
-    color: #213547;
-    background-color: #FFF;
-    --icon-color: #000;
-  }
-
-  a {
-    color: var(--black-color);
-  }
 
   a:hover {
     color: var(--orange-color);

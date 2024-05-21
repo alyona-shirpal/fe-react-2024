@@ -2,4 +2,27 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  background: var(--base-background);
+}
+
+.dark {
+  --base-background: var(--bg-dark);
+  --text-color: var(--white-color);
+  --icon-color: var(--white-color);
+  --link-color: var(--white-color);
+  --bg-secondary: var(--grey-color);
+  --text-secondary: var(--white-color);
+  --search-onhover: var(--grey-color);
+  --border-primary: var(--light-grey);
+}
+
+.light {
+  --base-background: var(--bg-light);
+  --text-color: var(--text-light-color);
+  --icon-color: var(--black-color);
+  --link-color: var(--text-light-color);
+  --bg-secondary: var(--white-color);
+  --text-secondary: var(--light-grey);
+  --search-onhover: var(--light-grey-onhover);
+  --border-primary: var(--light-border);
 }
