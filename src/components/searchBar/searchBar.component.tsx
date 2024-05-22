@@ -1,21 +1,22 @@
 import React, { useState } from 'react';
 
+import { filters } from '@/assets/constants/filters.ts';
 import { ArrowDownIcon } from '@/assets/icons/ArrowDown.tsx';
 import { ArrowUpIcon } from '@/assets/icons/ArrowUp.tsx';
 import { SearchIcon } from '@/assets/icons/Search.tsx';
 
 import styles from './searchBar.module.css';
 export const SearchBar: React.FC = () => {
-    const [isDropdown, setIsDropdown] = useState<boolean>(false);
+    const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
     const [activeCategory, setActiveCategory] = useState<string>('');
     const [activeFilter, setActiveFilter] = useState<string>('');
 
     const handleDropdown = () => {
-        if (isDropdown) {
-            setIsDropdown(false);
+        if (isDropdownOpen) {
+            setIsDropdownOpen(false);
         } else {
             setActiveFilter('');
-            setIsDropdown(true);
+            setIsDropdownOpen(true);
         }
     };
 
@@ -53,33 +54,22 @@ export const SearchBar: React.FC = () => {
                     <h3 className={styles.sortBy}> Sort by:</h3>
                     <button
                         onClick={handleDropdown}
-                        className={`${styles.priceLowButton} ${isDropdown && !activeFilter ? styles.priceLowButtonActive : ''}`}
+                        className={`${styles.priceLowButton} ${isDropdownOpen && !activeFilter ? styles.priceLowButtonActive : ''}`}
                     >
-                        Price (High - Low) {isDropdown ? <ArrowUpIcon /> : <ArrowDownIcon />}
+                        Price (High - Low) {isDropdownOpen ? <ArrowUpIcon /> : <ArrowDownIcon />}
                     </button>
-                    {isDropdown && (
+                    {isDropdownOpen && (
                         <menu className={styles.dropdownMenu}>
-                            <li
-                                role="button"
-                                onClick={() => handleFilter('Price (Low - High)')}
-                                className={`${styles.filterPrice} ${activeFilter === 'Price (Low - High)' ? styles.filterPriceActive : ''}`}
-                            >
-                                Price (Low - High)
-                            </li>
-                            <li
-                                role="button"
-                                onClick={() => handleFilter('Newest')}
-                                className={`${styles.filterPrice} ${activeFilter === 'Newest' ? styles.filterPriceActive : ''}`}
-                            >
-                                Newest
-                            </li>
-                            <li
-                                role="button"
-                                onClick={() => handleFilter('Oldest')}
-                                className={`${styles.filterPrice} ${activeFilter === 'Oldest' ? styles.filterPriceActive : ''}`}
-                            >
-                                Oldest
-                            </li>
+                            {filters.map((item) => (
+                                <li
+                                    role="button"
+                                    key={item.key}
+                                    onClick={() => handleFilter(item.key)}
+                                    className={`${styles.filterPrice} ${activeFilter === item.key ? styles.filterPriceActive : ''}`}
+                                >
+                                    {item.label}
+                                </li>
+                            ))}
                         </menu>
                     )}
                 </div>

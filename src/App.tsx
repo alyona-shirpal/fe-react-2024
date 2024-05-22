@@ -54,9 +54,15 @@ function App() {
                 onThemeChange={handleThemeChange}
                 currentTheme={theme}
             />
-            {activePage === 'products' && <SearchBar />}
 
-            {activePage === 'about' ? <About /> : <ProductList updateTotalCart={updateTotalCart} />}
+            {activePage === 'products' ? (
+                <>
+                    <SearchBar />
+                    <ProductList updateTotalCart={updateTotalCart} />
+                </>
+            ) : (
+                <About />
+            )}
 
             <Footer />
         </div>
