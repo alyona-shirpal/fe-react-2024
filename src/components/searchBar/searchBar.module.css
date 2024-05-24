@@ -31,6 +31,8 @@
 .search {
   padding-left: 10px;
   all: unset;
+  width: 80%;
+  color: var(--text-color);
 }
 
 .search::placeholder {
@@ -127,6 +129,7 @@
   line-height: 17px;
   padding-left: 19px;
   color: var(--text-secondary);
+  cursor: pointer;
 }
 
 .filterPriceActive {
@@ -139,6 +142,19 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+}
+
+@media screen and (min-width: 640px) and (max-width: 900px) {
+
+  .categoriesWrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .categories {
+    gap: 5px;
+  }
 }
 
 @media screen and (min-width:  900px) and (max-width: 1090px) {

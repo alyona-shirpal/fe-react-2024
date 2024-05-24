@@ -8,7 +8,7 @@ import { SearchIcon } from '@/assets/icons/Search.tsx';
 import styles from './searchBar.module.css';
 export const SearchBar: React.FC = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
-    const [activeCategory, setActiveCategory] = useState<string>('');
+    const [activeCategories, setActiveCategories] = useState<string[]>([]);
     const [activeFilter, setActiveFilter] = useState<string>('');
 
     const handleDropdown = () => {
@@ -21,7 +21,11 @@ export const SearchBar: React.FC = () => {
     };
 
     const handleCategory = (categoryName: string) => {
-        setActiveCategory(categoryName);
+        setActiveCategories((previousCategory) =>
+            previousCategory.includes(categoryName)
+                ? previousCategory.filter((category) => category !== categoryName)
+                : [...previousCategory, categoryName],
+        );
     };
 
     const handleFilter = (filterName: string) => {
@@ -43,7 +47,7 @@ export const SearchBar: React.FC = () => {
                         <button
                             key={category}
                             onClick={() => handleCategory(category)}
-                            className={`${styles.categoryButton} ${activeCategory === category ? styles.activeCategory : ''}`}
+                            className={`${styles.categoryButton} ${activeCategories.includes(category) ? styles.activeCategory : ''}`}
                         >
                             {category}
                         </button>
