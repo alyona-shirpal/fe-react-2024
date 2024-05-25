@@ -9,6 +9,7 @@
   font-weight: 700;
   line-height: 44px;
   text-align: left;
+  color: var(--text-color);
 }
 
 .aboutTextPar {
@@ -16,6 +17,7 @@
   font-weight: 400;
   line-height: 32px;
   text-align: left;
+  color: var(--text-color);
 }
 
 .aboutText {
@@ -24,7 +26,7 @@
 }
 
 .aboutLink {
-  color: var(--white-color);
+  color: var(--link-color);
   text-decoration: underline;
   text-underline-offset: 4px;
   text-decoration-thickness: 1px;
@@ -36,13 +38,6 @@
 
 .imageWrapper {
   display: flex;
-}
-
-@media (prefers-color-scheme: light) {
-
-  .aboutLink {
-    color: var(--black-color);
-  }
 }
 
 @media screen and (min-width: 200px) and (max-width: 747px) {
@@ -65,12 +60,14 @@
     font-size: 16px;
     font-weight: 400;
     line-height: 19.5px;
+    color: var(--text-color);
   }
 
   .aboutTextHeader {
     font-size: 27px;
     font-weight: 600;
     line-height: 32px;
+    color: var(--text-color);
   }
 
   .aboutImage {

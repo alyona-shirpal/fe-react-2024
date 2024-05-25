@@ -79,7 +79,7 @@
 .counter {
   width: 17px;
   height: 17px;
-  color: var(--white-color);
+  color: var(--text-color);
   background: var(--orange-color);
   position: absolute;
   z-index: 999;
@@ -92,12 +92,8 @@
   user-select: none;
 }
 
-
-@media (prefers-color-scheme: light) {
-
-  .defaultLink {
-    color: var(--white-color)
-  }
+.defaultLink {
+  color: var(--white-color);
 }
 
 @media screen and (min-width: 200px) and (max-width: 748px) {

@@ -3,4 +3,10 @@
   --black-color: #000;
   --white-color: #FFF;
   --grey-color: #333;
+  --bg-dark: #111;
+  --bg-light: #FFF;
+  --text-light-color: #111;
+  --light-grey: #656565;
+  --light-grey-onhover: #F1F1F1;
+  --light-border: #E1E1E1;
 }
