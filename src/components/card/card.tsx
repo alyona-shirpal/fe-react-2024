@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { CartIcon } from '@/assets/icons/Cart.tsx';
 import type { Product } from '@/types/interfaces/Product.ts';
 
-import styles from './card.module.css';
+import styles from './Card.module.css';
 
 interface CardProps {
     product: Product;

@@ -6,36 +6,42 @@ import { ArrowUpIcon } from '@/assets/icons/ArrowUp.tsx';
 import { SearchIcon } from '@/assets/icons/Search.tsx';
 
 import styles from './searchBar.module.css';
-export const SearchBar: React.FC = () => {
-    const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
-    const [activeCategories, setActiveCategories] = useState<string[]>([]);
-    const [activeFilter, setActiveFilter] = useState<string>('');
 
+interface SearchProps {
+    onSearch: (term: string) => void;
+    onCategoryChange: (category: string) => void;
+    onFilterChange: (filter: string) => void;
+    activeCategories: string[];
+    activeFilter: string;
+}
+export const SearchBar: React.FC<SearchProps> = ({ onSearch, onCategoryChange, onFilterChange, activeCategories, activeFilter }) => {
+    const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+    const [searchTerm, setSearchTerm] = useState<string>('');
+    const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchTerm(event.target.value);
+        onSearch(event.target.value);
+    };
     const handleDropdown = () => {
         if (isDropdownOpen) {
             setIsDropdownOpen(false);
         } else {
-            setActiveFilter('');
+            onFilterChange('price-desc');
             setIsDropdownOpen(true);
         }
     };
 
     const handleCategory = (categoryName: string) => {
-        setActiveCategories((previousCategory) =>
-            previousCategory.includes(categoryName)
-                ? previousCategory.filter((category) => category !== categoryName)
-                : [...previousCategory, categoryName],
-        );
+        onCategoryChange(categoryName);
     };
 
     const handleFilter = (filterName: string) => {
-        setActiveFilter(filterName);
+        onFilterChange(filterName);
     };
 
     return (
         <div className={styles.searchBarWrapper}>
             <div className={styles.inputSearch}>
-                <input type="text" placeholder="Search..." className={styles.search} />
+                <input type="text" placeholder="Search..." className={styles.search} onChange={handleSearchChange} value={searchTerm} />
                 <button className={styles.searchIconButton}>
                     <SearchIcon />
                 </button>
@@ -58,7 +64,7 @@ export const SearchBar: React.FC = () => {
                     <h3 className={styles.sortBy}> Sort by:</h3>
                     <button
                         onClick={handleDropdown}
-                        className={`${styles.priceLowButton} ${isDropdownOpen && !activeFilter ? styles.priceLowButtonActive : ''}`}
+                        className={`${styles.priceLowButton} ${isDropdownOpen && activeFilter === 'price-desc' ? styles.priceLowButtonActive : ''}`}
                     >
                         Price (High - Low) {isDropdownOpen ? <ArrowUpIcon /> : <ArrowDownIcon />}
                     </button>
