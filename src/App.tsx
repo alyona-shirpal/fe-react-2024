@@ -95,7 +95,7 @@ function App() {
         const paginated = filtered.slice((currentPage - 1) * 8, currentPage * 8);
         setPaginatedProducts(paginated);
         setTotalPages(Math.ceil(filtered.length / 8));
-    }, [activeFilter, searchTerm, activeCategories, products]);
+    }, [activeFilter, searchTerm, activeCategories, products, currentPage]);
 
     const handleActivePage = (page: ActivePage) => {
         setActivePage(page);
