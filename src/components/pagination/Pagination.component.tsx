@@ -10,39 +10,45 @@ interface PaginationProps {
     currentPage: number;
     onPageChange: (page: number) => void;
 }
+
 export const Pagination: React.FC<PaginationProps> = ({ totalPages, onPageChange, currentPage }) => {
     const [activePage, setActivePage] = useState<number>(currentPage);
+
     const getPagination = (): (string | number)[] => {
         const pages = [];
 
-        const shouldShowEllipsis = totalPages > 5;
+        const shouldShowEllipsis = totalPages > 3;
         const startPage = Math.max(2, activePage - 1);
         const endPage = Math.min(totalPages - 1, activePage + 1);
 
         pages.push(1);
 
-        if (shouldShowEllipsis && activePage > 3) {
+        if (shouldShowEllipsis && startPage > 2) {
             pages.push('...');
         }
+
         for (let index = startPage; index <= endPage; index++) {
             pages.push(index);
         }
-        if (shouldShowEllipsis && activePage < totalPages - 2) {
+
+        if (shouldShowEllipsis && endPage < totalPages - 1) {
             pages.push('...');
         }
 
         if (totalPages > 1) {
             pages.push(totalPages);
         }
+
         return pages;
     };
 
-    useEffect(() => {}, [activePage]);
+    useEffect(() => {
+        setActivePage(currentPage);
+    }, [currentPage]);
 
     const handleClick = (page: number | string) => {
         if (page === '...') return;
         setActivePage(page as number);
-
         onPageChange(page as number);
     };
 
@@ -73,7 +79,9 @@ export const Pagination: React.FC<PaginationProps> = ({ totalPages, onPageChange
                     key={index}
                     onClick={() => handleClick(page)}
                     disabled={typeof page === 'string'}
-                    className={`${styles.pageNumber} ${page === activePage ? styles.selectedPage : ''}`}
+                    className={
+                        typeof page === 'number' ? `${styles.pageNumber} ${page === activePage ? styles.selectedPage : ''}` : styles.dots
+                    }
                 >
                     {page}
                 </button>

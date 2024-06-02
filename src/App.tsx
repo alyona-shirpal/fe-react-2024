@@ -10,6 +10,7 @@ import type { Product } from '@/types/interfaces/Product.ts';
 import type { ActivePage, ActiveTheme } from '@/types/states.ts';
 import { fetchApi } from '@/utils/fetchApi.ts';
 import { getCartTotalAmount } from '@/utils/getCartTotalAmount.ts';
+import { getPaginatedProducts } from '@/utils/getPaginatedProducts.ts';
 
 import styles from './App.module.css';
 
@@ -31,9 +32,6 @@ function App() {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [products, setProducts] = useState<Product[]>([]);
     const [totalPages, setTotalPages] = useState(0);
-    const [activeCategories, setActiveCategories] = useState<string[]>([]);
-    const [activeFilter, setActiveFilter] = useState<string>('');
-    const [searchTerm, setSearchTerm] = useState<string>('');
 
     const [paginatedProducts, setPaginatedProducts] = useState<Product[]>([]);
 
@@ -47,7 +45,7 @@ function App() {
             const productData = await fetchApi();
             setProducts(productData);
 
-            const paginated = productData.slice((currentPage - 1) * 8, currentPage * 8);
+            const paginated = getPaginatedProducts(productData, currentPage);
             setPaginatedProducts(paginated);
 
             setTotalPages(Math.ceil(productData.length / 8));
@@ -55,47 +53,6 @@ function App() {
 
         fetchProduct();
     }, [currentPage]);
-
-    useEffect(() => {
-        let filtered = products;
-
-        if (searchTerm) {
-            filtered = filtered.filter((product) => product.title.toLowerCase().includes(searchTerm.toLowerCase()));
-        }
-
-        if (activeCategories.length > 0) {
-            filtered = filtered.filter((product) => activeCategories.includes(product.category.name));
-        }
-
-        if (activeFilter) {
-            switch (activeFilter) {
-                case 'price-asc': {
-                    filtered = filtered.sort((a, b) => a.price - b.price);
-
-                    break;
-                }
-                case 'price-desc': {
-                    filtered = filtered.sort((a, b) => b.price - a.price);
-
-                    break;
-                }
-                case 'newest': {
-                    filtered = filtered.sort((a, b) => new Date(b.creationAt).getTime() - new Date(a.creationAt).getTime());
-
-                    break;
-                }
-                case 'oldest': {
-                    filtered = filtered.sort((a, b) => new Date(a.creationAt).getTime() - new Date(b.creationAt).getTime());
-
-                    break;
-                }
-            }
-        }
-
-        const paginated = filtered.slice((currentPage - 1) * 8, currentPage * 8);
-        setPaginatedProducts(paginated);
-        setTotalPages(Math.ceil(filtered.length / 8));
-    }, [activeFilter, searchTerm, activeCategories, products, currentPage]);
 
     const handleActivePage = (page: ActivePage) => {
         setActivePage(page);
@@ -115,23 +72,11 @@ function App() {
         setCurrentPage(page);
     };
 
-    const handleSearch = (term: string) => {
-        setSearchTerm(term);
-        setCurrentPage(1);
-    };
-
-    const handleCategoryChange = (category: string) => {
-        setActiveCategories((previousCategories) =>
-            previousCategories.includes(category)
-                ? previousCategories.filter((cat) => cat !== category)
-                : [...previousCategories, category],
-        );
-        setCurrentPage(1);
-    };
-
-    const handleFilterChange = (filter: string) => {
-        setActiveFilter(filter);
-        setCurrentPage(1);
+    const handleFilteredProducts = (filteredProducts: Product[]) => {
+        setPaginatedProducts(filteredProducts);
+        const paginated = getPaginatedProducts(filteredProducts, currentPage);
+        setPaginatedProducts(paginated);
+        setTotalPages(Math.ceil(filteredProducts.length / 8));
     };
 
     return (
@@ -147,11 +92,10 @@ function App() {
             {activePage === 'products' && products ? (
                 <>
                     <SearchBar
-                        onSearch={handleSearch}
-                        onCategoryChange={handleCategoryChange}
-                        onFilterChange={handleFilterChange}
-                        activeCategories={activeCategories}
-                        activeFilter={activeFilter}
+                        products={products}
+                        currentPage={currentPage}
+                        onPageChange={handlePageChange}
+                        onFilteredProducts={handleFilteredProducts}
                     />
                     <ProductList updateTotalCart={updateTotalCart} products={paginatedProducts} />
                     <Pagination totalPages={totalPages} onPageChange={handlePageChange} currentPage={currentPage} />

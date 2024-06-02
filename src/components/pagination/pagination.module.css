@@ -8,7 +8,7 @@
 .arrowButton {
   width: 32px;
   height: 32px;
-  border: 1px solid #F1F1F1;
+  border: 1px solid var(--onhover);
   color: var(--text-color);
   border-radius: 8px;
   display: flex;
@@ -17,10 +17,15 @@
   padding: 0;
 }
 
+.arrowButton:hover {
+  border: none;
+  background: var(--onhover);
+}
+
 .pageNumber {
   width: 32px;
   height: 32px;
-  border: 1px solid #F1F1F1;
+  border: 1px solid var(--onhover);
   color: var(--text-color);
   border-radius: 8px;
   font-size: 14px;
@@ -33,7 +38,7 @@
 }
 
 .pageNumber:hover {
-  background: #F1F1F1;
+  background: var(--onhover);
   border: none;
 }
 
@@ -41,4 +46,9 @@
   background: var(--orange-color);
   color: var(--white-color);
   font-weight: 700;
+  border: none;
+}
+
+.dots {
+  color: var(--text-color);
 }
