@@ -8,7 +8,7 @@
 .arrowButton {
   width: 32px;
   height: 32px;
-  border: 1px solid var(--onhover);
+  box-shadow: 0 0 2px 0 var(--border-primary);
   color: var(--text-color);
   border-radius: 8px;
   display: flex;
@@ -25,7 +25,7 @@
 .pageNumber {
   width: 32px;
   height: 32px;
-  border: 1px solid var(--onhover);
+  box-shadow: 0 0 2px 0 var(--border-primary);
   color: var(--text-color);
   border-radius: 8px;
   font-size: 14px;

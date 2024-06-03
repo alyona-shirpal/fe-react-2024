@@ -31,6 +31,7 @@ export const ProductWrapper: React.FC<ProductWrapperProperty> = ({ updateTotalCa
 
         fetchProduct();
     }, [currentPage]);
+
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
     };
