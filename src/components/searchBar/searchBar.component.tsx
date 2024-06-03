@@ -147,6 +147,7 @@ export const SearchBar: React.FC<SearchProps> = ({ products, currentPage, onPage
                     >
                         {currentSort} {isDropdownOpen ? <ArrowUpIcon /> : <ArrowDownIcon />}
                     </button>
+
                     {isDropdownOpen && (
                         <menu className={styles.dropdownMenu} ref={dropdownReference}>
                             {filteredFilters.map((item) => (
