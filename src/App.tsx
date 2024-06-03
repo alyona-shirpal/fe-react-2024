@@ -3,8 +3,7 @@ import { useEffect, useState } from 'react';
 import { About } from '@/components/about/About.component.tsx';
 import { Footer } from '@/components/footer/Footer.component.tsx';
 import { Header } from '@/components/header/Header.component.tsx';
-import { ProductList } from '@/components/productList/ProductList.component.tsx';
-import { SearchBar } from '@/components/searchBar/searchBar.component.tsx';
+import { ProductWrapper } from '@/components/productWrapper/productWrapper.component.tsx';
 import type { ActivePage, ActiveTheme } from '@/types/states.ts';
 import { getCartTotalAmount } from '@/utils/getCartTotalAmount.ts';
 
@@ -35,14 +34,14 @@ function App() {
         setActivePage(page);
     };
 
-    const updateTotalCart = () => {
-        const total = getCartTotalAmount();
-        setTotalCart(total);
-    };
-
     const handleThemeChange = (newTheme: ActiveTheme) => {
         setTheme(newTheme);
         localStorage.setItem('theme', newTheme);
+    };
+
+    const updateTotalCart = () => {
+        const total = getCartTotalAmount();
+        setTotalCart(total);
     };
 
     return (
@@ -55,14 +54,7 @@ function App() {
                 currentTheme={theme}
             />
 
-            {activePage === 'products' ? (
-                <>
-                    <SearchBar />
-                    <ProductList updateTotalCart={updateTotalCart} />
-                </>
-            ) : (
-                <About />
-            )}
+            {activePage === 'products' ? <ProductWrapper updateTotalCart={updateTotalCart} /> : <About />}
 
             <Footer />
         </div>

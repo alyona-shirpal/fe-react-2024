@@ -12,7 +12,7 @@
   --link-color: var(--white-color);
   --bg-secondary: var(--grey-color);
   --text-secondary: var(--white-color);
-  --search-onhover: var(--grey-color);
+  --onhover: var(--grey-color);
   --border-primary: var(--light-grey);
 }
 
@@ -23,6 +23,6 @@
   --link-color: var(--text-light-color);
   --bg-secondary: var(--white-color);
   --text-secondary: var(--light-grey);
-  --search-onhover: var(--light-grey-onhover);
+  --onhover: var(--light-grey-onhover);
   --border-primary: var(--light-border);
 }

@@ -53,11 +53,16 @@ html {
   min-height: 100%;
   display: flex;
   flex-direction: column;
+  background: var(--black-color);
 }
 
 @media (prefers-color-scheme: light) {
 
   a:hover {
     color: var(--orange-color);
+  }
+
+  .main-root {
+    background: var(--white-color);
   }
 }
