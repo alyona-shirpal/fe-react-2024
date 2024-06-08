@@ -4,6 +4,7 @@ import { About } from '@/components/about/About.component.tsx';
 import { LayoutComponent } from '@/components/LayoutComponent/LayoutComponent.tsx';
 import { ProductDetail } from '@/components/productDetail/ProductDetail.component.tsx';
 import { ProductWrapper } from '@/components/productWrapper/productWrapper.component.tsx';
+import { NotFoundPage } from '@/pages/notFoundPage/NotFoundPage.tsx';
 
 function App() {
     return (
@@ -12,6 +13,7 @@ function App() {
                 <Route index element={<About />} />
                 <Route path={'products'} element={<ProductWrapper />} />
                 <Route path={'products/:id'} element={<ProductDetail />} />
+                <Route path={'*'} element={<NotFoundPage />} />
             </Route>
         </Routes>
     );

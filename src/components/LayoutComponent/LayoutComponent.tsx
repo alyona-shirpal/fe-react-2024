@@ -4,6 +4,7 @@ import { Outlet } from 'react-router-dom';
 import { Footer } from '@/components/footer/Footer.component.tsx';
 import { Header } from '@/components/header/Header.component.tsx';
 import { THEME } from '@/constants/common.ts';
+import { CartProvider } from '@/contexts/CartContextProvider.tsx';
 import type { ActiveTheme } from '@/types/states.ts';
 
 import styles from './layout.module.css';
@@ -28,10 +29,12 @@ export const LayoutComponent = () => {
     };
 
     return (
-        <div className={`${styles.mainContainer} ${theme === 'dark' ? styles.dark : styles.light}`}>
-            <Header onThemeChange={handleThemeChange} currentTheme={theme} />
-            <Outlet />
-            <Footer />
-        </div>
+        <CartProvider>
+            <div className={`${styles.mainContainer} ${theme === 'dark' ? styles.dark : styles.light}`}>
+                <Header onThemeChange={handleThemeChange} currentTheme={theme} />
+                <Outlet />
+                <Footer />
+            </div>
+        </CartProvider>
     );
 };
