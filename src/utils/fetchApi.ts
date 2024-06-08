@@ -10,7 +10,16 @@ export const fetchApi = async (): Promise<Product[]> => {
 
         return response.data;
     } catch (error) {
-        console.error('Error fetching data:', error);
-        throw error;
+        throw new Error(`Error fetching data: ${error}`);
+    }
+};
+
+export const fetchProduct = async (id: string): Promise<Product> => {
+    try {
+        const response: AxiosResponse<Product> = await axios.get(`${API_URL}/${id}`);
+
+        return response.data;
+    } catch (error) {
+        throw new Error(`Error fetching product: ${error}`);
     }
 };

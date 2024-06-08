@@ -7,11 +7,7 @@ import type { Product } from '@/types/interfaces/Product.ts';
 import { fetchApi } from '@/utils/fetchApi.ts';
 import { getPaginatedProducts } from '@/utils/getPaginatedProducts.ts';
 
-interface ProductWrapperProperty {
-    updateTotalCart: () => void;
-}
-
-export const ProductWrapper: React.FC<ProductWrapperProperty> = ({ updateTotalCart }) => {
+export const ProductWrapper: React.FC = () => {
     const [totalPages, setTotalPages] = useState(0);
 
     const [paginatedProducts, setPaginatedProducts] = useState<Product[]>([]);
@@ -51,7 +47,7 @@ export const ProductWrapper: React.FC<ProductWrapperProperty> = ({ updateTotalCa
                 onPageChange={handlePageChange}
                 onFilteredProducts={handleFilteredProducts}
             />
-            <ProductList updateTotalCart={updateTotalCart} products={paginatedProducts} />
+            <ProductList products={paginatedProducts} />
             <Pagination totalPages={totalPages} onPageChange={handlePageChange} currentPage={currentPage} />
         </div>
     );
