@@ -10,6 +10,7 @@ import { SignUpIcon } from '@/assets/icons/SignUp.tsx';
 import { SunIcon } from '@/assets/icons/Sun.tsx';
 import { useCart } from '@/contexts/CartContextProvider.tsx';
 import type { ActiveTheme } from '@/types/states.ts';
+import { findCartQuantity } from '@/utils/findQuantity.ts';
 
 import styles from './header.module.css';
 
@@ -47,21 +48,17 @@ export const Header: React.FC<HeaderProps> = ({ onThemeChange, currentTheme }) =
             <div className={styles.rightHeader}>
                 <div className={styles.pages}>
                     <NavLink className={({ isActive }) => (isActive ? styles.activeButton : styles.defaultLink)} to={'/'}>
-                        {' '}
-                        About{' '}
+                        About
                     </NavLink>
                     <NavLink className={({ isActive }) => (isActive ? styles.activeButton : styles.defaultLink)} to={'/products'}>
-                        {' '}
-                        Products{' '}
+                        Products
                     </NavLink>
                 </div>
 
                 <div className={styles.menuSide}>
                     <button className={styles.cartButton}>
                         <CartIcon color={'white'} />
-                        {cart.length > 0 && (
-                            <div className={styles.counter}>{cart.reduce((accumulator, it) => accumulator + it.quantity, 0)}</div>
-                        )}
+                        {cart.length > 0 && <div className={styles.counter}>{findCartQuantity(cart)}</div>}
                     </button>
                     <button className={styles.burgerButton}>
                         <BurgerIcon />

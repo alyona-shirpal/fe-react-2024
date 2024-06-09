@@ -72,63 +72,63 @@ export const ProductDetail: React.FC = () => {
 
     return (
         <div className={styles.main}>
-            <div className={styles.detailWrapper}>
-                <div className={styles.photosWrapper}>
-                    <div className={styles.thumbnailWrapper}>
-                        {product?.images.map((item, index) => (
-                            <img
-                                src={item}
-                                alt="Product"
-                                key={index}
-                                onClick={() => handleThumbnailClick(item)}
-                                className={styles.thumbnail}
-                            />
-                        ))}
-                    </div>
-                    <div className={styles.mainImage}>
-                        <button className={styles.leftArrow} onClick={handlePreviousImage}>
-                            <LeftArrowIcon disable={false} />
-                        </button>
-                        <img src={mainImage} alt={product?.title || 'Product Image'} />
-                        <button className={styles.rightArrow} onClick={handleNextImage}>
-                            <RightArrowIcon disable={false} />
-                        </button>
-                    </div>
-                </div>
-                <div className={styles.infoWrapper}>
-                    <div className={styles.backWrapper}>
-                        <button className={styles.backButton} onClick={handleBackClick}>
-                            <span>
-                                <LeftArrowIcon disable={false} />
-                            </span>
-                            Back
-                        </button>
-                        <MobileOnly>
-                            <button className={styles.addToCartButton} onClick={handleCartClick}>
-                                <CartIcon color={'white'} /> Add to cart
-                            </button>
-                        </MobileOnly>
-                    </div>
-                    <h1 className={styles.title}>{product?.title}</h1>
-                    <div className={styles.categoryName}> {product?.category.name}</div>
-                    <div className={styles.description}> {product?.description}</div>
-
-                    <div className={styles.priceWrapper}>
-                        <div className={styles.priceWrap}>
-                            <div className={styles.cardPrice}>{product?.price}</div>
-                            <p className={styles.hryvna}>₴</p>
+            {product && (
+                <div className={styles.detailWrapper}>
+                    <div className={styles.photosWrapper}>
+                        <div className={styles.thumbnailWrapper}>
+                            {product.images.map((item, index) => (
+                                <img
+                                    src={item}
+                                    alt="Product"
+                                    key={index}
+                                    onClick={() => handleThumbnailClick(item)}
+                                    className={styles.thumbnail}
+                                />
+                            ))}
                         </div>
-
-                        <DesktopOnly>
-                            <div>
+                        <div className={styles.mainImage}>
+                            <button className={styles.leftArrow} onClick={handlePreviousImage}>
+                                <LeftArrowIcon disable={false} />
+                            </button>
+                            <img src={mainImage} alt={product.title || 'Product Image'} />
+                            <button className={styles.rightArrow} onClick={handleNextImage}>
+                                <RightArrowIcon disable={false} />
+                            </button>
+                        </div>
+                    </div>
+                    <div className={styles.infoWrapper}>
+                        <div className={styles.backWrapper}>
+                            <button className={styles.backButton} onClick={handleBackClick}>
+                                <span>
+                                    <LeftArrowIcon disable={false} />
+                                </span>
+                                Back
+                            </button>
+                            <MobileOnly>
                                 <button className={styles.addToCartButton} onClick={handleCartClick}>
                                     <CartIcon color={'white'} /> Add to cart
                                 </button>
+                            </MobileOnly>
+                        </div>
+                        <h1 className={styles.title}>{product.title}</h1>
+                        <div className={styles.categoryName}> {product.category.name}</div>
+                        <div className={styles.description}> {product.description}</div>
+
+                        <div className={styles.priceWrapper}>
+                            <div className={styles.priceWrap}>
+                                <div className={styles.cardPrice}>{product.price}</div>
+                                <p className={styles.hryvna}>₴</p>
                             </div>
-                        </DesktopOnly>
+
+                            <DesktopOnly>
+                                <button className={styles.addToCartButton} onClick={handleCartClick}>
+                                    <CartIcon color={'white'} /> Add to cart
+                                </button>
+                            </DesktopOnly>
+                        </div>
                     </div>
                 </div>
-            </div>
+            )}
         </div>
     );
 };
