@@ -14,6 +14,7 @@ function App() {
                 <Route path={'products'} element={<ProductWrapper />} />
                 <Route path={'products/:id'} element={<ProductDetail />} />
                 <Route path={'*'} element={<NotFoundPage />} />
+                <Route path={'not-found'} element={<NotFoundPage />} />
             </Route>
         </Routes>
     );

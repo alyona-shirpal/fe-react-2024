@@ -28,13 +28,21 @@ export const ProductDetail: React.FC = () => {
 
     useEffect(() => {
         if (id) {
-            const fetchedProductById = async () => {
-                const fetchedProduct = await fetchProduct(id);
-                setProduct(fetchedProduct);
-                setMainImage(fetchedProduct?.images[0]);
+            const fetchProductById = async () => {
+                try {
+                    const fetchedProduct = await fetchProduct(id);
+                    if (fetchedProduct) {
+                        setProduct(fetchedProduct);
+                        setMainImage(fetchedProduct.images[0]);
+                    } else {
+                        navigate('/not-found');
+                    }
+                } catch {
+                    navigate('/not-found');
+                }
             };
 
-            fetchedProductById();
+            fetchProductById();
         }
     }, [id]);
 
@@ -92,7 +100,7 @@ export const ProductDetail: React.FC = () => {
                         <button className={styles.backButton} onClick={handleBackClick}>
                             <span>
                                 <LeftArrowIcon disable={false} />
-                            </span>{' '}
+                            </span>
                             Back
                         </button>
                         <MobileOnly>
