@@ -1,63 +1,22 @@
-import { useEffect, useState } from 'react';
+import { Route, Routes } from 'react-router-dom';
 
 import { About } from '@/components/about/About.component.tsx';
-import { Footer } from '@/components/footer/Footer.component.tsx';
-import { Header } from '@/components/header/Header.component.tsx';
+import { LayoutComponent } from '@/components/LayoutComponent/LayoutComponent.tsx';
+import { ProductDetail } from '@/components/productDetail/ProductDetail.component.tsx';
 import { ProductWrapper } from '@/components/productWrapper/productWrapper.component.tsx';
-import type { ActivePage, ActiveTheme } from '@/types/states.ts';
-import { getCartTotalAmount } from '@/utils/getCartTotalAmount.ts';
-
-import styles from './App.module.css';
+import { NotFoundPage } from '@/pages/notFoundPage/NotFoundPage.tsx';
 
 function App() {
-    const getInitialTheme = () => {
-        const savedTheme = localStorage.getItem('theme') as ActiveTheme;
-
-        if (savedTheme) {
-            return savedTheme;
-        }
-
-        const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        return isDarkMode ? 'dark' : 'light';
-    };
-
-    const [activePage, setActivePage] = useState<ActivePage>('about');
-    const [totalCart, setTotalCart] = useState<number>(0);
-    const [theme, setTheme] = useState<ActiveTheme>(() => getInitialTheme());
-
-    useEffect(() => {
-        const total = getCartTotalAmount();
-        setTotalCart(total);
-    }, []);
-
-    const handleActivePage = (page: ActivePage) => {
-        setActivePage(page);
-    };
-
-    const handleThemeChange = (newTheme: ActiveTheme) => {
-        setTheme(newTheme);
-        localStorage.setItem('theme', newTheme);
-    };
-
-    const updateTotalCart = () => {
-        const total = getCartTotalAmount();
-        setTotalCart(total);
-    };
-
     return (
-        <div className={`${styles.mainContainer} ${theme === 'dark' ? styles.dark : styles.light}`}>
-            <Header
-                activePage={activePage}
-                onChange={handleActivePage}
-                totalCart={totalCart}
-                onThemeChange={handleThemeChange}
-                currentTheme={theme}
-            />
-
-            {activePage === 'products' ? <ProductWrapper updateTotalCart={updateTotalCart} /> : <About />}
-
-            <Footer />
-        </div>
+        <Routes>
+            <Route path={'/'} element={<LayoutComponent />}>
+                <Route index element={<About />} />
+                <Route path={'products'} element={<ProductWrapper />} />
+                <Route path={'products/:id'} element={<ProductDetail />} />
+                <Route path={'*'} element={<NotFoundPage />} />
+                <Route path={'not-found'} element={<NotFoundPage />} />
+            </Route>
+        </Routes>
     );
 }
 

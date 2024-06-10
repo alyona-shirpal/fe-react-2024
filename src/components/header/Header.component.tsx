@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { NavLink } from 'react-router-dom';
 
 import { BurgerIcon } from '@/assets/icons/Burger.tsx';
 import { CartIcon } from '@/assets/icons/Cart.tsx';
@@ -7,20 +8,19 @@ import { LogoIcon } from '@/assets/icons/Logo.tsx';
 import { MoonIcon } from '@/assets/icons/Moon.tsx';
 import { SignUpIcon } from '@/assets/icons/SignUp.tsx';
 import { SunIcon } from '@/assets/icons/Sun.tsx';
-import type { ActivePage, ActiveTheme } from '@/types/states.ts';
+import { useCart } from '@/contexts/CartContextProvider.tsx';
+import type { ActiveTheme } from '@/types/states.ts';
+import { findCartQuantity } from '@/utils/findQuantity.ts';
 
 import styles from './header.module.css';
 
 interface HeaderProps {
-    onChange: (page: ActivePage) => void;
-    activePage: ActivePage;
-    totalCart: number;
     onThemeChange: (theme: ActiveTheme) => void;
     currentTheme: ActiveTheme;
 }
-export const Header: React.FC<HeaderProps> = ({ onChange, activePage, totalCart, onThemeChange, currentTheme }) => {
+export const Header: React.FC<HeaderProps> = ({ onThemeChange, currentTheme }) => {
     const [activeTheme, setActiveTheme] = useState<ActiveTheme>(currentTheme);
-
+    const cart = useCart().cart;
     const changeTheme = (theme: ActiveTheme) => {
         setActiveTheme(theme);
         onThemeChange(theme);
@@ -47,21 +47,18 @@ export const Header: React.FC<HeaderProps> = ({ onChange, activePage, totalCart,
 
             <div className={styles.rightHeader}>
                 <div className={styles.pages}>
-                    <button className={activePage === 'about' ? styles.activeButton : styles.defaultLink} onClick={() => onChange('about')}>
+                    <NavLink className={({ isActive }) => (isActive ? styles.activeButton : styles.defaultLink)} to={'/'}>
                         About
-                    </button>
-                    <button
-                        className={activePage === 'products' ? styles.activeButton : styles.defaultLink}
-                        onClick={() => onChange('products')}
-                    >
+                    </NavLink>
+                    <NavLink className={({ isActive }) => (isActive ? styles.activeButton : styles.defaultLink)} to={'/products'}>
                         Products
-                    </button>
+                    </NavLink>
                 </div>
 
                 <div className={styles.menuSide}>
                     <button className={styles.cartButton}>
                         <CartIcon color={'white'} />
-                        {totalCart > 0 && <div className={styles.counter}>{totalCart}</div>}
+                        {cart.length > 0 && <div className={styles.counter}>{findCartQuantity(cart)}</div>}
                     </button>
                     <button className={styles.burgerButton}>
                         <BurgerIcon />

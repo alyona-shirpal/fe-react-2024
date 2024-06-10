@@ -1,0 +1,37 @@
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.innerWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.number {
+  font-size: 69px;
+  color: var(--text-color);
+  margin: 0;
+}
+
+.text {
+  font-size: 14px;
+  color: var(--text-color);
+  margin: 0;
+}
+
+.buttonToHome {
+  height: 46px;
+  color: var(--white-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 7px;
+  border-radius: 40px;
+  background: var(--orange-color);
+}
