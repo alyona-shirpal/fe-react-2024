@@ -1,0 +1,110 @@
+import React, { useEffect, useState } from 'react';
+
+import { Pagination } from '@/components/pagination/Pagination.component.tsx';
+import { ProductList } from '@/components/productList/ProductList.component.tsx';
+import { SearchBar } from '@/components/searchBar/searchBar.component.tsx';
+import { ApiService } from '@/services/axios.service.ts';
+import type { Product, ProductResponse } from '@/types/interfaces/Product.ts';
+
+import styles from './productWrapper.module.css';
+
+export const ProductWrapper: React.FC = () => {
+    const [totalPages, setTotalPages] = useState(0);
+
+    const [paginatedProducts, setPaginatedProducts] = useState<Product[]>([]);
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [products, setProducts] = useState<Product[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [searchTerm, setSearchTerm] = useState<string>('');
+    const [category, setCategory] = useState<number>(0);
+    const [activeFilter, setActiveFilter] = useState<string>('');
+    const limit = 8;
+
+    useEffect(() => {
+        const fetchProduct = async () => {
+            try {
+                const offset = (currentPage - 1) * limit;
+
+                const parameters = new URLSearchParams({
+                    title: searchTerm,
+                    categoryId: category.toString(),
+                    limit: limit.toString(),
+                    offset: offset.toString(),
+                });
+
+                if (activeFilter) {
+                    if (activeFilter === 'price-asc') {
+                        parameters.append('sortOrder', 'asc');
+                        parameters.append('price-min', '0');
+                    } else if (activeFilter === 'price-desc') {
+                        parameters.append('sortOrder', 'desc');
+                        parameters.append('price-min', '9999999');
+                    }
+                }
+                const url = `v1/products/?${parameters.toString()}`;
+                const productData = await ApiService.getInstance().get<ProductResponse>(url);
+
+                setIsLoading(false);
+                setProducts(productData.products);
+                setPaginatedProducts(productData.products);
+
+                const calculatedTotalPages = Math.ceil(productData.total / limit);
+                setTotalPages(calculatedTotalPages);
+            } catch {
+                setIsLoading(false);
+            }
+        };
+
+        fetchProduct();
+    }, [currentPage, searchTerm, category, activeFilter]);
+
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
+    };
+
+    const handleFilteredProducts = (filteredProducts: Product[]) => {
+        setPaginatedProducts(filteredProducts);
+    };
+
+    const handleSearch = (term: string) => {
+        setSearchTerm(term);
+    };
+
+    const onFilterChange = (filter: string) => {
+        setActiveFilter(filter);
+    };
+
+    const handleCategoryChange = (categoryId: number) => {
+        categoryId === category ? setCategory(0) : setCategory(categoryId);
+    };
+
+    return (
+        <>
+            {isLoading ? (
+                <p>Loading...</p>
+            ) : (
+                <div>
+                    <SearchBar
+                        products={products}
+                        currentPage={currentPage}
+                        onPageChange={handlePageChange}
+                        onFilteredProducts={handleFilteredProducts}
+                        onSearch={handleSearch}
+                        onCategoryChange={handleCategoryChange}
+                        onFilterChange={onFilterChange}
+                    />
+                    {products.length === 0 ? (
+                        <div className={styles.noProducts}>
+                            <h1>No matches found for your search criteria.</h1>
+                        </div>
+                    ) : (
+                        <>
+                            <ProductList products={paginatedProducts} />
+                            <Pagination totalPages={totalPages} onPageChange={handlePageChange} currentPage={currentPage} />
+                        </>
+                    )}
+                </div>
+            )}
+        </>
+    );
+};

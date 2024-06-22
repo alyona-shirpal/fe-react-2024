@@ -6,8 +6,8 @@ import { LeftArrowIcon } from '@/assets/icons/LeftArrow.tsx';
 import { RightArrowIcon } from '@/assets/icons/RightArrow.tsx';
 import { DesktopOnly, MobileOnly } from '@/components/media-helpers/MediaHelpers.tsx';
 import { useCart } from '@/contexts/CartContextProvider.tsx';
+import { ApiService } from '@/services/axios.service.ts';
 import type { Product } from '@/types/interfaces/Product.ts';
-import { fetchProduct } from '@/utils/fetchApi.ts';
 
 import styles from './productDetail.module.css';
 
@@ -30,7 +30,7 @@ export const ProductDetail: React.FC = () => {
         if (id) {
             const fetchProductById = async () => {
                 try {
-                    const fetchedProduct = await fetchProduct(id);
+                    const fetchedProduct: Product = await ApiService.getInstance().get(`v1/products/${id}`);
                     if (fetchedProduct) {
                         setProduct(fetchedProduct);
                         setMainImage(fetchedProduct.images[0]);
