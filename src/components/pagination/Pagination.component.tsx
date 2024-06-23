@@ -14,6 +14,10 @@ interface PaginationProps {
 export const Pagination: React.FC<PaginationProps> = ({ totalPages, onPageChange, currentPage }) => {
     const [activePage, setActivePage] = useState<number>(currentPage);
 
+    useEffect(() => {
+        setActivePage(currentPage);
+    }, [currentPage]);
+
     const getPagination = (): (string | number)[] => {
         const pages = [];
 
@@ -41,10 +45,6 @@ export const Pagination: React.FC<PaginationProps> = ({ totalPages, onPageChange
 
         return pages;
     };
-
-    useEffect(() => {
-        setActivePage(currentPage);
-    }, [currentPage]);
 
     const handleClick = (page: number | string) => {
         if (page === '...') return;

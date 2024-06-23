@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ArrowDownIcon } from '@/assets/icons/ArrowDown.tsx';
 import { ArrowUpIcon } from '@/assets/icons/ArrowUp.tsx';
 import { SearchIcon } from '@/assets/icons/Search.tsx';
+import { categories } from '@/constants/categories.ts';
 import { filters } from '@/constants/filters.ts';
 import type { Product } from '@/types/interfaces/Product.ts';
 
@@ -13,12 +14,23 @@ interface SearchProps {
     currentPage: number;
     onPageChange: (page: number) => void;
     onFilteredProducts: (products: Product[]) => void;
+    onSearch: (term: string) => void;
+    onCategoryChange: (categoryId: number) => void;
+    onFilterChange: (filter: string) => void;
 }
 
-export const SearchBar: React.FC<SearchProps> = ({ products, currentPage, onPageChange, onFilteredProducts }) => {
+export const SearchBar: React.FC<SearchProps> = ({
+    products,
+    currentPage,
+    onPageChange,
+    onFilteredProducts,
+    onSearch,
+    onCategoryChange,
+    onFilterChange,
+}) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
     const [searchTerm, setSearchTerm] = useState<string>('');
-    const [activeCategories, setActiveCategories] = useState<string[]>([]);
+    const [activeCategory, setActiveCategory] = useState<number>(0);
     const [activeFilter, setActiveFilter] = useState<string>('');
     const [currentSort, setCurrentSort] = useState<string>('Price (High - Low)');
     const buttonReference = useRef<HTMLButtonElement>(null);
@@ -27,24 +39,8 @@ export const SearchBar: React.FC<SearchProps> = ({ products, currentPage, onPage
     useEffect(() => {
         let filtered = products;
 
-        if (searchTerm) {
-            filtered = filtered.filter((product) => product.title.toLowerCase().includes(searchTerm.toLowerCase()));
-        }
-
-        if (activeCategories.length > 0) {
-            filtered = filtered.filter((product) => activeCategories.includes(product.category.name));
-        }
-
         if (activeFilter) {
             switch (activeFilter) {
-                case 'price-asc': {
-                    filtered = filtered.sort((a, b) => a.price - b.price);
-                    break;
-                }
-                case 'price-desc': {
-                    filtered = filtered.sort((a, b) => b.price - a.price);
-                    break;
-                }
                 case 'newest': {
                     filtered = filtered.sort((a, b) => new Date(b.creationAt).getTime() - new Date(a.creationAt).getTime());
                     break;
@@ -57,7 +53,7 @@ export const SearchBar: React.FC<SearchProps> = ({ products, currentPage, onPage
         }
 
         onFilteredProducts(filtered);
-    }, [activeFilter, searchTerm, activeCategories, products, currentPage]);
+    }, [activeFilter, products, currentPage]);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -84,6 +80,7 @@ export const SearchBar: React.FC<SearchProps> = ({ products, currentPage, onPage
 
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
+        onSearch(event.target.value);
         onPageChange(1);
     };
 
@@ -98,13 +95,16 @@ export const SearchBar: React.FC<SearchProps> = ({ products, currentPage, onPage
         }
     };
 
-    const handleCategory = (category: string) => {
-        setActiveCategories((previousCategories) =>
-            previousCategories.includes(category)
-                ? previousCategories.filter((cat) => cat !== category)
-                : [...previousCategories, category],
-        );
-        onPageChange(1);
+    const handleCategory = (categoryId: number) => {
+        if (activeCategory === categoryId) {
+            setActiveCategory(0);
+            onCategoryChange(0);
+            onPageChange(1);
+        } else {
+            setActiveCategory(categoryId);
+            onCategoryChange(categoryId);
+            onPageChange(1);
+        }
     };
 
     const handleFilter = (filterKey: string, filterName: string) => {
@@ -112,6 +112,7 @@ export const SearchBar: React.FC<SearchProps> = ({ products, currentPage, onPage
         setCurrentSort(filterName);
         onPageChange(1);
         setIsDropdownOpen(false);
+        onFilterChange(filterKey);
     };
 
     const filteredFilters = filters.filter((item) => item.label !== currentSort);
@@ -127,13 +128,13 @@ export const SearchBar: React.FC<SearchProps> = ({ products, currentPage, onPage
 
             <div className={styles.categoriesWrapper}>
                 <div className={styles.categories}>
-                    {['Electronics', 'Shoes', 'Clothes'].map((category) => (
+                    {categories.map((category) => (
                         <button
-                            key={category}
-                            onClick={() => handleCategory(category)}
-                            className={`${styles.categoryButton} ${activeCategories.includes(category) ? styles.activeCategory : ''}`}
+                            key={category.id}
+                            onClick={() => handleCategory(category.id)}
+                            className={`${styles.categoryButton} ${activeCategory === category.id ? styles.activeCategory : ''}`}
                         >
-                            {category}
+                            {category.name}
                         </button>
                     ))}
                 </div>
