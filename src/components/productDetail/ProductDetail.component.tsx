@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { CartIcon } from '@/assets/icons/Cart.tsx';
 import { LeftArrowIcon } from '@/assets/icons/LeftArrow.tsx';
 import { RightArrowIcon } from '@/assets/icons/RightArrow.tsx';
+import { Loader } from '@/components/loader/Loader.tsx';
 import { DesktopOnly, MobileOnly } from '@/components/media-helpers/MediaHelpers.tsx';
 import { useCart } from '@/contexts/CartContextProvider.tsx';
 import { ApiService } from '@/services/axios.service.ts';
@@ -15,6 +16,7 @@ export const ProductDetail: React.FC = () => {
     const { id } = useParams();
     const [product, setProduct] = useState<Product>();
     const [mainImage, setMainImage] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
 
     const cart = useCart();
 
@@ -32,6 +34,7 @@ export const ProductDetail: React.FC = () => {
                 try {
                     const fetchedProduct: Product = await ApiService.getInstance().get(`v1/products/${id}`);
                     if (fetchedProduct) {
+                        setIsLoading(false);
                         setProduct(fetchedProduct);
                         setMainImage(fetchedProduct.images[0]);
                     } else {
@@ -39,6 +42,7 @@ export const ProductDetail: React.FC = () => {
                     }
                 } catch {
                     navigate('/not-found');
+                    setIsLoading(false);
                 }
             };
 
@@ -71,64 +75,70 @@ export const ProductDetail: React.FC = () => {
     };
 
     return (
-        <div className={styles.main}>
-            {product && (
-                <div className={styles.detailWrapper}>
-                    <div className={styles.photosWrapper}>
-                        <div className={styles.thumbnailWrapper}>
-                            {product.images.map((item, index) => (
-                                <img
-                                    src={item}
-                                    alt="Product"
-                                    key={index}
-                                    onClick={() => handleThumbnailClick(item)}
-                                    className={styles.thumbnail}
-                                />
-                            ))}
-                        </div>
-                        <div className={styles.mainImage}>
-                            <button className={styles.leftArrow} onClick={handlePreviousImage}>
-                                <LeftArrowIcon disable={false} />
-                            </button>
-                            <img src={mainImage} alt={product.title || 'Product Image'} />
-                            <button className={styles.rightArrow} onClick={handleNextImage}>
-                                <RightArrowIcon disable={false} />
-                            </button>
-                        </div>
-                    </div>
-                    <div className={styles.infoWrapper}>
-                        <div className={styles.backWrapper}>
-                            <button className={styles.backButton} onClick={handleBackClick}>
-                                <span>
-                                    <LeftArrowIcon disable={false} />
-                                </span>
-                                Back
-                            </button>
-                            <MobileOnly>
-                                <button className={styles.addToCartButton} onClick={handleCartClick}>
-                                    <CartIcon color={'white'} /> Add to cart
-                                </button>
-                            </MobileOnly>
-                        </div>
-                        <h1 className={styles.title}>{product.title}</h1>
-                        <div className={styles.categoryName}> {product.category.name}</div>
-                        <div className={styles.description}> {product.description}</div>
-
-                        <div className={styles.priceWrapper}>
-                            <div className={styles.priceWrap}>
-                                <div className={styles.cardPrice}>{product.price}</div>
-                                <p className={styles.hryvna}>₴</p>
+        <>
+            {isLoading ? (
+                <Loader />
+            ) : (
+                <div className={styles.main}>
+                    {product && (
+                        <div className={styles.detailWrapper}>
+                            <div className={styles.photosWrapper}>
+                                <div className={styles.thumbnailWrapper}>
+                                    {product.images.map((item, index) => (
+                                        <img
+                                            src={item}
+                                            alt="Product"
+                                            key={index}
+                                            onClick={() => handleThumbnailClick(item)}
+                                            className={styles.thumbnail}
+                                        />
+                                    ))}
+                                </div>
+                                <div className={styles.mainImage}>
+                                    <button className={styles.leftArrow} onClick={handlePreviousImage}>
+                                        <LeftArrowIcon disable={false} />
+                                    </button>
+                                    <img src={mainImage} alt={product.title || 'Product Image'} />
+                                    <button className={styles.rightArrow} onClick={handleNextImage}>
+                                        <RightArrowIcon disable={false} />
+                                    </button>
+                                </div>
                             </div>
+                            <div className={styles.infoWrapper}>
+                                <div className={styles.backWrapper}>
+                                    <button className={styles.backButton} onClick={handleBackClick}>
+                                        <span>
+                                            <LeftArrowIcon disable={false} />
+                                        </span>
+                                        Back
+                                    </button>
+                                    <MobileOnly>
+                                        <button className={styles.addToCartButton} onClick={handleCartClick}>
+                                            <CartIcon color={'white'} /> Add to cart
+                                        </button>
+                                    </MobileOnly>
+                                </div>
+                                <h1 className={styles.title}>{product.title}</h1>
+                                <div className={styles.categoryName}> {product.category.name}</div>
+                                <div className={styles.description}> {product.description}</div>
 
-                            <DesktopOnly>
-                                <button className={styles.addToCartButton} onClick={handleCartClick}>
-                                    <CartIcon color={'white'} /> Add to cart
-                                </button>
-                            </DesktopOnly>
+                                <div className={styles.priceWrapper}>
+                                    <div className={styles.priceWrap}>
+                                        <div className={styles.cardPrice}>{product.price}</div>
+                                        <p className={styles.hryvna}>₴</p>
+                                    </div>
+
+                                    <DesktopOnly>
+                                        <button className={styles.addToCartButton} onClick={handleCartClick}>
+                                            <CartIcon color={'white'} /> Add to cart
+                                        </button>
+                                    </DesktopOnly>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
             )}
-        </div>
+        </>
     );
 };

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 
+import { Loader } from '@/components/loader/Loader.tsx';
 import { Pagination } from '@/components/pagination/Pagination.component.tsx';
 import { ProductList } from '@/components/productList/ProductList.component.tsx';
 import { SearchBar } from '@/components/searchBar/searchBar.component.tsx';
-import { ApiService } from '@/services/axios.service.ts';
-import type { Product, ProductResponse } from '@/types/interfaces/Product.ts';
+import type { Product } from '@/types/interfaces/Product.ts';
+import { fetchProductFnct } from '@/utils/fetchProduct.ts';
 
 import styles from './productWrapper.module.css';
 
@@ -23,26 +24,7 @@ export const ProductWrapper: React.FC = () => {
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const offset = (currentPage - 1) * limit;
-
-                const parameters = new URLSearchParams({
-                    title: searchTerm,
-                    categoryId: category.toString(),
-                    limit: limit.toString(),
-                    offset: offset.toString(),
-                });
-
-                if (activeFilter) {
-                    if (activeFilter === 'price-asc') {
-                        parameters.append('sortOrder', 'asc');
-                        parameters.append('price-min', '0');
-                    } else if (activeFilter === 'price-desc') {
-                        parameters.append('sortOrder', 'desc');
-                        parameters.append('price-min', '9999999');
-                    }
-                }
-                const url = `v1/products/?${parameters.toString()}`;
-                const productData = await ApiService.getInstance().get<ProductResponse>(url);
+                const productData = await fetchProductFnct(currentPage, limit, searchTerm, category, activeFilter);
 
                 setIsLoading(false);
                 setProducts(productData.products);
@@ -81,7 +63,7 @@ export const ProductWrapper: React.FC = () => {
     return (
         <>
             {isLoading ? (
-                <p>Loading...</p>
+                <Loader />
             ) : (
                 <div>
                     <SearchBar
