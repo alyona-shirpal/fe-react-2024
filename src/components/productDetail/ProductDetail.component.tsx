@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { CartIcon } from '@/assets/icons/Cart.tsx';
@@ -7,17 +8,18 @@ import { RightArrowIcon } from '@/assets/icons/RightArrow.tsx';
 import { Loader } from '@/components/loader/Loader.tsx';
 import { DesktopOnly, MobileOnly } from '@/components/media-helpers/MediaHelpers.tsx';
 import { useCart } from '@/contexts/CartContextProvider.tsx';
-import { ApiService } from '@/services/axios.service.ts';
-import type { Product } from '@/types/interfaces/Product.ts';
+import { getProductByIdThunk } from '@/store/product/thunk.ts';
+import type { AppDispatch } from '@/store/store.ts';
+import { selectProduct } from '@/store/store.ts';
 
 import styles from './productDetail.module.css';
 
 export const ProductDetail: React.FC = () => {
     const { id } = useParams();
-    const [product, setProduct] = useState<Product>();
     const [mainImage, setMainImage] = useState('');
     const [isLoading, setIsLoading] = useState(true);
-
+    const dispatch = useDispatch<AppDispatch>();
+    const { product } = useSelector(selectProduct);
     const cart = useCart();
 
     const handleCartClick = () => {
@@ -30,25 +32,16 @@ export const ProductDetail: React.FC = () => {
 
     useEffect(() => {
         if (id) {
-            const fetchProductById = async () => {
-                try {
-                    const fetchedProduct: Product = await ApiService.getInstance().get(`v1/products/${id}`);
-                    if (fetchedProduct) {
-                        setIsLoading(false);
-                        setProduct(fetchedProduct);
-                        setMainImage(fetchedProduct.images[0]);
-                    } else {
-                        navigate('/not-found');
-                    }
-                } catch {
-                    navigate('/not-found');
-                    setIsLoading(false);
-                }
-            };
-
-            fetchProductById();
+            dispatch(getProductByIdThunk({ id }));
+            if (product) {
+                setIsLoading(false);
+                setMainImage(product.images[0]);
+            } else {
+                navigate('/not-found');
+                setIsLoading(false);
+            }
         }
-    }, [id]);
+    }, [dispatch, id, product]);
 
     const handleBackClick = () => {
         navigate(-1);

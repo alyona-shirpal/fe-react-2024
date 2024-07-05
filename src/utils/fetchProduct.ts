@@ -11,11 +11,14 @@ export const fetchProductFnct = async (
     const offset = (currentPage - 1) * limit;
 
     const parameters = new URLSearchParams({
-        title: searchTerm,
         categoryId: category.toString(),
         limit: limit.toString(),
         offset: offset.toString(),
     });
+
+    if (searchTerm) {
+        parameters.append('title', searchTerm);
+    }
 
     if (activeFilter) {
         if (activeFilter === 'price-asc') {
@@ -27,5 +30,6 @@ export const fetchProductFnct = async (
         }
     }
     const url = `v1/products/?${parameters.toString()}`;
+
     return await ApiService.getInstance().get<ProductResponse>(url);
 };
