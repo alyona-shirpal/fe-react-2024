@@ -1,29 +1,26 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { useSelector } from 'react-redux';
 
 import { LeftArrowIcon } from '@/assets/icons/LeftArrow.tsx';
 import { RightArrowIcon } from '@/assets/icons/RightArrow.tsx';
+import { selectCurrentPage } from '@/store/store.ts';
 
 import styles from './pagination.module.css';
 
 interface PaginationProps {
     totalPages: number;
-    currentPage: number;
     onPageChange: (page: number) => void;
 }
 
-export const Pagination: React.FC<PaginationProps> = ({ totalPages, onPageChange, currentPage }) => {
-    const [activePage, setActivePage] = useState<number>(currentPage);
-
-    useEffect(() => {
-        setActivePage(currentPage);
-    }, [currentPage]);
+export const Pagination: React.FC<PaginationProps> = ({ totalPages, onPageChange }) => {
+    const currentPage = useSelector(selectCurrentPage);
 
     const getPagination = (): (string | number)[] => {
         const pages = [];
 
         const shouldShowEllipsis = totalPages > 3;
-        const startPage = Math.max(2, activePage - 1);
-        const endPage = Math.min(totalPages - 1, activePage + 1);
+        const startPage = Math.max(2, currentPage - 1);
+        const endPage = Math.min(totalPages - 1, currentPage + 1);
 
         pages.push(1);
 
@@ -48,30 +45,27 @@ export const Pagination: React.FC<PaginationProps> = ({ totalPages, onPageChange
 
     const handleClick = (page: number | string) => {
         if (page === '...') return;
-        setActivePage(page as number);
         onPageChange(page as number);
     };
 
     const handlePreviousClick = () => {
-        if (activePage > 1) {
-            const newPage = activePage - 1;
-            setActivePage(newPage);
+        if (currentPage > 1) {
+            const newPage = currentPage - 1;
             onPageChange(newPage);
         }
     };
 
     const handleNextClick = () => {
-        if (activePage < totalPages) {
-            const newPage = activePage + 1;
-            setActivePage(newPage);
+        if (currentPage < totalPages) {
+            const newPage = currentPage + 1;
             onPageChange(newPage);
         }
     };
 
     return (
         <div className={styles.paginationWrapper}>
-            <button onClick={handlePreviousClick} className={styles.arrowButton} disabled={activePage === 1}>
-                <LeftArrowIcon disable={activePage === 1} />
+            <button onClick={handlePreviousClick} className={styles.arrowButton} disabled={currentPage === 1}>
+                <LeftArrowIcon disable={currentPage === 1} />
             </button>
 
             {getPagination().map((page, index) => (
@@ -80,15 +74,15 @@ export const Pagination: React.FC<PaginationProps> = ({ totalPages, onPageChange
                     onClick={() => handleClick(page)}
                     disabled={typeof page === 'string'}
                     className={
-                        typeof page === 'number' ? `${styles.pageNumber} ${page === activePage ? styles.selectedPage : ''}` : styles.dots
+                        typeof page === 'number' ? `${styles.pageNumber} ${page === currentPage ? styles.selectedPage : ''}` : styles.dots
                     }
                 >
                     {page}
                 </button>
             ))}
 
-            <button onClick={handleNextClick} className={styles.arrowButton} disabled={activePage === totalPages}>
-                <RightArrowIcon disable={activePage === totalPages} />
+            <button onClick={handleNextClick} className={styles.arrowButton} disabled={currentPage === totalPages}>
+                <RightArrowIcon disable={currentPage === totalPages} />
             </button>
         </div>
     );

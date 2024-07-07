@@ -1,3 +1,4 @@
+import type { Dispatch, SetStateAction } from 'react';
 import React, { useEffect, useRef, useState } from 'react';
 
 import { ArrowDownIcon } from '@/assets/icons/ArrowDown.tsx';
@@ -11,33 +12,31 @@ import styles from './searchBar.module.css';
 
 interface SearchProps {
     products: Product[];
-    currentPage: number;
-    onPageChange: (page: number) => void;
     onFilteredProducts: (products: Product[]) => void;
-    onSearch: (term: string) => void;
     onCategoryChange: (categoryId: number) => void;
     onFilterChange: (filter: string) => void;
+    currentCategory: number;
+    searchTerm: string;
+    setSearchTerm: Dispatch<SetStateAction<string>>;
 }
 
 export const SearchBar: React.FC<SearchProps> = ({
     products,
-    currentPage,
-    onPageChange,
     onFilteredProducts,
-    onSearch,
     onCategoryChange,
     onFilterChange,
-}) => {
+    currentCategory,
+    searchTerm,
+    setSearchTerm,
+}: SearchProps) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
-    const [searchTerm, setSearchTerm] = useState<string>('');
-    const [activeCategory, setActiveCategory] = useState<number>(0);
     const [activeFilter, setActiveFilter] = useState<string>('');
     const [currentSort, setCurrentSort] = useState<string>('Price (High - Low)');
     const buttonReference = useRef<HTMLButtonElement>(null);
     const dropdownReference = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        let filtered = products;
+        let filtered = [...products];
 
         if (activeFilter) {
             switch (activeFilter) {
@@ -53,7 +52,7 @@ export const SearchBar: React.FC<SearchProps> = ({
         }
 
         onFilteredProducts(filtered);
-    }, [activeFilter, products, currentPage]);
+    }, [activeFilter, products]);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -78,12 +77,6 @@ export const SearchBar: React.FC<SearchProps> = ({
         };
     }, [isDropdownOpen]);
 
-    const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchTerm(event.target.value);
-        onSearch(event.target.value);
-        onPageChange(1);
-    };
-
     const handleDropdown = () => {
         if (isDropdownOpen) {
             setIsDropdownOpen(false);
@@ -96,21 +89,12 @@ export const SearchBar: React.FC<SearchProps> = ({
     };
 
     const handleCategory = (categoryId: number) => {
-        if (activeCategory === categoryId) {
-            setActiveCategory(0);
-            onCategoryChange(0);
-            onPageChange(1);
-        } else {
-            setActiveCategory(categoryId);
-            onCategoryChange(categoryId);
-            onPageChange(1);
-        }
+        onCategoryChange(categoryId);
     };
 
     const handleFilter = (filterKey: string, filterName: string) => {
         setActiveFilter(filterKey);
         setCurrentSort(filterName);
-        onPageChange(1);
         setIsDropdownOpen(false);
         onFilterChange(filterKey);
     };
@@ -120,7 +104,13 @@ export const SearchBar: React.FC<SearchProps> = ({
     return (
         <div className={styles.searchBarWrapper}>
             <div className={styles.inputSearch}>
-                <input type="text" placeholder="Search..." className={styles.search} onChange={handleSearchChange} value={searchTerm} />
+                <input
+                    type="text"
+                    placeholder="Search..."
+                    className={styles.search}
+                    onChange={(event) => setSearchTerm(event.target.value)}
+                    value={searchTerm}
+                />
                 <button className={styles.searchIconButton}>
                     <SearchIcon />
                 </button>
@@ -132,7 +122,7 @@ export const SearchBar: React.FC<SearchProps> = ({
                         <button
                             key={category.id}
                             onClick={() => handleCategory(category.id)}
-                            className={`${styles.categoryButton} ${activeCategory === category.id ? styles.activeCategory : ''}`}
+                            className={`${styles.categoryButton} ${currentCategory === category.id ? styles.activeCategory : ''}`}
                         >
                             {category.name}
                         </button>
@@ -146,7 +136,8 @@ export const SearchBar: React.FC<SearchProps> = ({
                         className={`${styles.priceLowButton} ${isDropdownOpen ? styles.priceLowButtonActive : ''}`}
                         ref={buttonReference}
                     >
-                        {currentSort} {isDropdownOpen ? <ArrowUpIcon /> : <ArrowDownIcon />}
+                        {currentSort}
+                        {isDropdownOpen ? <ArrowUpIcon /> : <ArrowDownIcon />}
                     </button>
 
                     {isDropdownOpen && (
