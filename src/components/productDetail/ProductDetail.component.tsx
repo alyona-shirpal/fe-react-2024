@@ -49,7 +49,6 @@ export const ProductDetail: React.FC = () => {
     useEffect(() => {
         if (product) {
             setMainImage(product.images[0]);
-            setIsLoading(false);
         }
     }, [product]);
 
