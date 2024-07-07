@@ -32,16 +32,26 @@ export const ProductDetail: React.FC = () => {
 
     useEffect(() => {
         if (id) {
-            dispatch(getProductByIdThunk({ id }));
-            if (product) {
-                setIsLoading(false);
-                setMainImage(product.images[0]);
-            } else {
-                navigate('/not-found');
-                setIsLoading(false);
-            }
+            setIsLoading(true);
+            dispatch(getProductByIdThunk({ id }))
+                .unwrap()
+                .then((productFetched) => {
+                    setMainImage(productFetched.images[0]);
+                    setIsLoading(false);
+                })
+                .catch(() => {
+                    navigate('/not-found');
+                    setIsLoading(false);
+                });
         }
-    }, [dispatch, id, product]);
+    }, [dispatch, id, navigate]);
+
+    useEffect(() => {
+        if (product) {
+            setMainImage(product.images[0]);
+            setIsLoading(false);
+        }
+    }, [product]);
 
     const handleBackClick = () => {
         navigate(-1);
