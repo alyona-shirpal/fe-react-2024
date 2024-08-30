@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { BurgerIcon } from '@/assets/icons/Burger.tsx';
 import { CartIcon } from '@/assets/icons/Cart.tsx';
@@ -21,9 +22,15 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ onThemeChange, currentTheme }) => {
     const [activeTheme, setActiveTheme] = useState<ActiveTheme>(currentTheme);
     const cart = useCart().cart;
+
+    const navigate = useNavigate();
     const changeTheme = (theme: ActiveTheme) => {
         setActiveTheme(theme);
         onThemeChange(theme);
+    };
+
+    const handleLogin = () => {
+        navigate('/login');
     };
 
     return (
@@ -64,7 +71,7 @@ export const Header: React.FC<HeaderProps> = ({ onThemeChange, currentTheme }) =
                         <BurgerIcon />
                     </button>
                     <div className={styles.authWrapper}>
-                        <button className={styles.authButton}>
+                        <button onClick={handleLogin} className={styles.authButton}>
                             <LoginIcon /> Login
                         </button>
                         <button className={styles.signUpButton}>

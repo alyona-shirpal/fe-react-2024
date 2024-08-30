@@ -6,6 +6,7 @@ import { About } from '@/components/about/About.component.tsx';
 import { LayoutComponent } from '@/components/LayoutComponent/LayoutComponent.tsx';
 import { ProductDetail } from '@/components/productDetail/ProductDetail.component.tsx';
 import { ProductWrapper } from '@/components/productWrapper/ProductWrapper.component.tsx';
+import { LoginPage } from '@/pages/login/Login.tsx';
 import { NotFoundPage } from '@/pages/notFoundPage/NotFoundPage.tsx';
 
 import 'react-toastify/dist/ReactToastify.css';
@@ -20,6 +21,7 @@ function App() {
                     <Route path={'products/:id'} element={<ProductDetail />} />
                     <Route path={'*'} element={<NotFoundPage />} />
                     <Route path={'not-found'} element={<NotFoundPage />} />
+                    <Route path={'login'} element={<LoginPage />} />
                 </Route>
             </Routes>
             <ToastContainer />
