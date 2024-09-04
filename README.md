@@ -9,7 +9,6 @@ This is a repository for the Masters Academy course "Getting Started with React"
 2. Add husky hooks: `npm run prepare` (just in case it hasn't run already during `npm install`)
 3. The minimal `node` version is stated in [.nvmrc](./.nvmrc). If you have `nvm` installed, you can run `nvm use` to switch to the correct version.
 4. Start the development server: `npm run dev`
-5. change
 ## Useful documentation
 
 - [Wiki](https://github.com/MastersAcademy/fe-react-2024/wiki)
